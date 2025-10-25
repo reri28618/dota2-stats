@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dota2 Stats - Аналитика и статистика</title>
+    <title>Dota2Stats - Статистика и аналитика Dota 2</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -13,17 +14,23 @@
         }
 
         :root {
-            --primary-color: #1a1a2e;
-            --secondary-color: #16213e;
-            --accent-color: #0f3460;
+            --primary-color: #0c1427;
+            --secondary-color: #1a243a;
+            --accent-color: #2a3f76;
             --text-color: #ffffff;
-            --highlight-color: #e94560;
+            --highlight-color: #e74c3c;
+            --win-color: #2ecc71;
+            --loss-color: #e74c3c;
         }
 
         body {
             background-color: var(--primary-color);
             color: var(--text-color);
             line-height: 1.6;
+            background-image: linear-gradient(rgba(12, 20, 39, 0.9), rgba(12, 20, 39, 0.9)), 
+                              url('https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-attachment: fixed;
         }
 
         .container {
@@ -34,9 +41,13 @@
 
         /* Header */
         header {
-            background-color: var(--secondary-color);
+            background-color: rgba(26, 36, 58, 0.95);
             padding: 1rem 0;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
         }
 
         .header-content {
@@ -48,33 +59,40 @@
         .logo {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
-        .logo img {
-            height: 40px;
+        .logo-icon {
+            color: var(--highlight-color);
+            font-size: 2rem;
         }
 
         .logo h1 {
-            font-size: 1.5rem;
-            color: var(--highlight-color);
+            font-size: 1.8rem;
+            background: linear-gradient(90deg, #e74c3c, #3498db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
         }
 
         nav ul {
             display: flex;
             list-style: none;
-            gap: 20px;
+            gap: 25px;
         }
 
         nav a {
             color: var(--text-color);
             text-decoration: none;
             font-weight: 500;
-            transition: color 0.3s;
+            transition: all 0.3s;
+            padding: 8px 12px;
+            border-radius: 4px;
         }
 
-        nav a:hover {
-            color: var(--highlight-color);
+        nav a:hover, nav a.active {
+            background-color: var(--accent-color);
+            color: var(--text-color);
         }
 
         .user-actions {
@@ -83,128 +101,176 @@
         }
 
         .btn {
-            padding: 8px 16px;
+            padding: 10px 20px;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
-            font-weight: 500;
+            font-weight: 600;
             transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .btn-login {
             background-color: transparent;
             color: var(--text-color);
-            border: 1px solid var(--text-color);
+            border: 2px solid var(--accent-color);
         }
 
         .btn-register {
-            background-color: var(--highlight-color);
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
             color: var(--text-color);
+            box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3);
         }
 
         .btn:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
         }
 
         /* Hero Section */
         .hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
-                        url('https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
-            background-size: cover;
-            background-position: center;
-            padding: 4rem 0;
+            padding: 5rem 0;
             text-align: center;
+            background: rgba(26, 36, 58, 0.7);
+            margin: 2rem 0;
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
         }
 
         .hero h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(90deg, #e74c3c, #3498db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .hero p {
-            font-size: 1.2rem;
-            max-width: 600px;
-            margin: 0 auto 2rem;
+            font-size: 1.3rem;
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            color: #cccccc;
         }
 
         .search-box {
             max-width: 600px;
             margin: 0 auto;
             display: flex;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            overflow: hidden;
         }
 
         .search-box input {
             flex: 1;
-            padding: 12px 16px;
+            padding: 15px 20px;
             border: none;
-            border-radius: 4px 0 0 4px;
-            font-size: 1rem;
+            font-size: 1.1rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+        }
+
+        .search-box input::placeholder {
+            color: #aaaaaa;
         }
 
         .search-box button {
-            background-color: var(--highlight-color);
+            background: linear-gradient(135deg, #3498db, #2980b9);
             color: white;
             border: none;
-            padding: 0 20px;
-            border-radius: 0 4px 4px 0;
+            padding: 0 25px;
             cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .search-box button:hover {
+            background: linear-gradient(135deg, #2980b9, #3498db);
         }
 
         /* Main Content */
         .main-content {
-            padding: 3rem 0;
+            padding: 2rem 0;
         }
 
         .section-title {
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-            color: var(--highlight-color);
-            border-bottom: 2px solid var(--accent-color);
-            padding-bottom: 0.5rem;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            border-left: 5px solid var(--highlight-color);
+            padding-left: 15px;
         }
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
             margin-bottom: 3rem;
         }
 
         .stat-card {
-            background-color: var(--secondary-color);
-            border-radius: 8px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .stat-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
         }
 
-        .stat-card h3 {
+        .stat-card i {
+            font-size: 2.5rem;
             margin-bottom: 1rem;
             color: var(--highlight-color);
         }
 
+        .stat-card h3 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            color: #cccccc;
+        }
+
         .stat-value {
-            font-size: 2rem;
+            font-size: 2.8rem;
             font-weight: bold;
+            margin: 0.5rem 0;
         }
 
         .matches-list {
             background-color: var(--secondary-color);
-            border-radius: 8px;
+            border-radius: 12px;
             overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            margin-bottom: 3rem;
+        }
+
+        .match-header {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            padding: 1.2rem;
+            background-color: var(--accent-color);
+            font-weight: 600;
         }
 
         .match-item {
             display: grid;
             grid-template-columns: 1fr 2fr 1fr;
-            padding: 1rem;
-            border-bottom: 1px solid var(--accent-color);
+            padding: 1.2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             align-items: center;
+            transition: background-color 0.3s;
+        }
+
+        .match-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
         }
 
         .match-item:last-child {
@@ -214,51 +280,111 @@
         .match-result {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         .win {
-            color: #4CAF50;
+            color: var(--win-color);
+            font-weight: 600;
         }
 
         .loss {
-            color: #F44336;
+            color: var(--loss-color);
+            font-weight: 600;
         }
 
         .hero-icon {
-            width: 40px;
-            height: 40px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
-            background-color: var(--accent-color);
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
         }
 
         .match-details {
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 8px;
+        }
+
+        .match-mode {
+            font-weight: 600;
         }
 
         .match-kda {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: #cccccc;
+        }
+
+        .match-duration {
+            font-size: 0.9rem;
+            color: #aaaaaa;
+        }
+
+        /* Heroes Section */
+        .heroes-section {
+            margin-bottom: 3rem;
+        }
+
+        .heroes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 20px;
+        }
+
+        .hero-card {
+            background-color: var(--secondary-color);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero-card:hover {
+            transform: scale(1.05);
+        }
+
+        .hero-image {
+            height: 100px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .hero-name {
+            padding: 12px;
+            font-weight: 600;
         }
 
         /* Footer */
         footer {
             background-color: var(--secondary-color);
-            padding: 2rem 0;
-            margin-top: 3rem;
+            padding: 3rem 0 1.5rem;
+            margin-top: 4rem;
         }
 
         .footer-content {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 2rem;
         }
 
         .footer-section h3 {
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
             color: var(--highlight-color);
+            font-size: 1.3rem;
+        }
+
+        .footer-section p {
+            color: #cccccc;
+            margin-bottom: 1rem;
         }
 
         .footer-section ul {
@@ -266,31 +392,57 @@
         }
 
         .footer-section ul li {
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.8rem;
         }
 
         .footer-section a {
-            color: var(--text-color);
+            color: #cccccc;
             text-decoration: none;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .footer-section a:hover {
             color: var(--highlight-color);
         }
 
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: var(--accent-color);
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            background-color: var(--highlight-color);
+            transform: translateY(-5px);
+        }
+
         .copyright {
             text-align: center;
-            margin-top: 2rem;
-            padding-top: 1rem;
-            border-top: 1px solid var(--accent-color);
-            color: #cccccc;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #aaaaaa;
+            font-size: 0.9rem;
         }
 
         /* Responsive */
-        @media (max-width: 768px) {
+        @media (max-width: 992px) {
             .header-content {
                 flex-direction: column;
-                gap: 15px;
+                gap: 20px;
             }
 
             nav ul {
@@ -299,12 +451,57 @@
             }
 
             .hero h2 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h2 {
                 font-size: 2rem;
             }
 
-            .match-item {
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .match-item, .match-header {
                 grid-template-columns: 1fr;
-                gap: 10px;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+
+            .heroes-grid {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            }
+        }
+
+        @media (max-width: 576px) {
+            .user-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .search-box {
+                flex-direction: column;
+            }
+
+            .search-box input, .search-box button {
+                width: 100%;
+                border-radius: 8px;
+                margin-bottom: 10px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -315,20 +512,23 @@
         <div class="container">
             <div class="header-content">
                 <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-crosshairs"></i>
+                    </div>
                     <h1>Dota2Stats</h1>
                 </div>
                 <nav>
                     <ul>
-                        <li><a href="#">Главная</a></li>
-                        <li><a href="#">Статистика</a></li>
-                        <li><a href="#">Герои</a></li>
-                        <li><a href="#">Профили</a></li>
-                        <li><a href="#">Турниры</a></li>
+                        <li><a href="#" class="active"><i class="fas fa-home"></i> Главная</a></li>
+                        <li><a href="#"><i class="fas fa-chart-bar"></i> Статистика</a></li>
+                        <li><a href="#"><i class="fas fa-users"></i> Герои</a></li>
+                        <li><a href="#"><i class="fas fa-user"></i> Профили</a></li>
+                        <li><a href="#"><i class="fas fa-trophy"></i> Турниры</a></li>
                     </ul>
                 </nav>
                 <div class="user-actions">
-                    <button class="btn btn-login">Войти</button>
-                    <button class="btn btn-register">Регистрация</button>
+                    <button class="btn btn-login"><i class="fas fa-sign-in-alt"></i> Войти</button>
+                    <button class="btn btn-register"><i class="fas fa-user-plus"></i> Регистрация</button>
                 </div>
             </div>
         </div>
@@ -338,10 +538,10 @@
     <section class="hero">
         <div class="container">
             <h2>Статистика Dota 2</h2>
-            <p>Анализируйте свои матчи, изучайте мету и улучшайте свои навыки в Dota 2</p>
+            <p>Анализируйте свои матчи, изучайте мету и улучшайте свои навыки в Dota 2 с помощью продвинутой аналитики</p>
             <div class="search-box">
                 <input type="text" placeholder="Введите ID игрока или никнейм...">
-                <button>Поиск</button>
+                <button><i class="fas fa-search"></i> Поиск</button>
             </div>
         </div>
     </section>
@@ -353,21 +553,25 @@
             <h2 class="section-title">Общая статистика</h2>
             <div class="stats-grid">
                 <div class="stat-card">
+                    <i class="fas fa-gamepad"></i>
                     <h3>Матчи сыграно</h3>
                     <div class="stat-value">1,247</div>
                     <p>За все время</p>
                 </div>
                 <div class="stat-card">
+                    <i class="fas fa-trophy"></i>
                     <h3>Процент побед</h3>
                     <div class="stat-value">54.3%</div>
                     <p>В текущем сезоне</p>
                 </div>
                 <div class="stat-card">
+                    <i class="fas fa-skull-crossbones"></i>
                     <h3>Средний KDA</h3>
                     <div class="stat-value">3.2</div>
                     <p>За последние 20 матчей</p>
                 </div>
                 <div class="stat-card">
+                    <i class="fas fa-chart-line"></i>
                     <h3>MMR</h3>
                     <div class="stat-value">4,250</div>
                     <p>Текущий рейтинг</p>
@@ -377,38 +581,89 @@
             <!-- Recent Matches -->
             <h2 class="section-title">Последние матчи</h2>
             <div class="matches-list">
+                <div class="match-header">
+                    <div>Результат</div>
+                    <div>Детали матча</div>
+                    <div>Время</div>
+                </div>
                 <div class="match-item">
                     <div class="match-result">
-                        <div class="hero-icon"></div>
+                        <div class="hero-icon"><i class="fas fa-fire"></i></div>
                         <span class="win">Победа</span>
                     </div>
                     <div class="match-details">
-                        <div>All Pick • 42:15</div>
-                        <div class="match-kda">12/3/15</div>
+                        <div class="match-mode">All Pick • 42:15</div>
+                        <div class="match-kda">12/3/15 (K/D/A)</div>
+                        <div class="match-duration">Длительность: 42 минуты</div>
                     </div>
                     <div>3 часа назад</div>
                 </div>
                 <div class="match-item">
                     <div class="match-result">
-                        <div class="hero-icon"></div>
+                        <div class="hero-icon"><i class="fas fa-shield-alt"></i></div>
                         <span class="loss">Поражение</span>
                     </div>
                     <div class="match-details">
-                        <div>All Pick • 38:22</div>
-                        <div class="match-kda">8/7/11</div>
+                        <div class="match-mode">All Pick • 38:22</div>
+                        <div class="match-kda">8/7/11 (K/D/A)</div>
+                        <div class="match-duration">Длительность: 38 минут</div>
                     </div>
                     <div>5 часов назад</div>
                 </div>
                 <div class="match-item">
                     <div class="match-result">
-                        <div class="hero-icon"></div>
+                        <div class="hero-icon"><i class="fas fa-bolt"></i></div>
                         <span class="win">Победа</span>
                     </div>
                     <div class="match-details">
-                        <div>All Pick • 51:10</div>
-                        <div class="match-kda">15/4/20</div>
+                        <div class="match-mode">All Pick • 51:10</div>
+                        <div class="match-kda">15/4/20 (K/D/A)</div>
+                        <div class="match-duration">Длительность: 51 минута</div>
                     </div>
                     <div>7 часов назад</div>
+                </div>
+            </div>
+
+            <!-- Popular Heroes -->
+            <h2 class="section-title">Популярные герои</h2>
+            <div class="heroes-section">
+                <div class="heroes-grid">
+                    <div class="hero-card">
+                        <div class="hero-image">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <div class="hero-name">Lina</div>
+                    </div>
+                    <div class="hero-card">
+                        <div class="hero-image">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="hero-name">Axe</div>
+                    </div>
+                    <div class="hero-card">
+                        <div class="hero-image">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <div class="hero-name">Zeus</div>
+                    </div>
+                    <div class="hero-card">
+                        <div class="hero-image">
+                            <i class="fas fa-magic"></i>
+                        </div>
+                        <div class="hero-name">Invoker</div>
+                    </div>
+                    <div class="hero-card">
+                        <div class="hero-image">
+                            <i class="fas fa-arrows-alt"></i>
+                        </div>
+                        <div class="hero-name">Windranger</div>
+                    </div>
+                    <div class="hero-card">
+                        <div class="hero-image">
+                            <i class="fas fa-moon"></i>
+                        </div>
+                        <div class="hero-name">Luna</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -420,34 +675,48 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <h3>Dota2Stats</h3>
-                    <p>Лучший ресурс для анализа статистики Dota 2. Улучшайте свои навыки с нами.</p>
+                    <p>Лучший ресурс для анализа статистики Dota 2. Улучшайте свои навыки с помощью нашей продвинутой аналитики.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-steam"></i></a>
+                        <a href="#"><i class="fab fa-discord"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
                 </div>
                 <div class="footer-section">
                     <h3>Разделы</h3>
                     <ul>
-                        <li><a href="#">Главная</a></li>
-                        <li><a href="#">Статистика</a></li>
-                        <li><a href="#">Герои</a></li>
-                        <li><a href="#">Профили</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Главная</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Статистика</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Герои</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Профили</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Турниры</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
                     <h3>Помощь</h3>
                     <ul>
-                        <li><a href="#">FAQ</a></li>
-                        <li><a href="#">Поддержка</a></li>
-                        <li><a href="#">Контакты</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> FAQ</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Поддержка</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Контакты</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> О нас</a></li>
                     </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Контакты</h3>
+                    <p><i class="fas fa-envelope"></i> info@dota2stats.com</p>
+                    <p><i class="fas fa-phone"></i> +7 (999) 123-45-67</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Москва, Россия</p>
                 </div>
             </div>
             <div class="copyright">
-                <p>&copy; 2023 Dota2Stats. Все права защищены.</p>
+                <p>&copy; 2023 Dota2Stats. Все права защищены. Dota 2 является зарегистрированной торговой маркой Valve Corporation.</p>
             </div>
         </div>
     </footer>
 
     <script>
-        // Простой JavaScript для демонстрации
+        // Инициализация данных при загрузке страницы
         document.addEventListener('DOMContentLoaded', function() {
             // Обработка поиска
             const searchButton = document.querySelector('.search-box button');
@@ -456,8 +725,9 @@
             searchButton.addEventListener('click', function() {
                 const query = searchInput.value.trim();
                 if (query) {
-                    alert(`Поиск игрока: ${query}`);
-                    // В реальном приложении здесь будет запрос к API
+                    alert(`Поиск игрока: ${query}\n\nВ реальном приложении здесь будет подключение к Steam API для получения статистики игрока.`);
+                } else {
+                    alert('Пожалуйста, введите ID игрока или никнейм для поиска.');
                 }
             });
 
@@ -472,13 +742,43 @@
             const registerBtn = document.querySelector('.btn-register');
             
             loginBtn.addEventListener('click', function() {
-                alert('Форма входа будет здесь');
+                alert('Форма входа будет открыта в модальном окне.\n\nЗдесь можно реализовать аутентификацию через Steam, Google или другие сервисы.');
             });
             
             registerBtn.addEventListener('click', function() {
-                alert('Форма регистрации будет здесь');
+                alert('Форма регистрации будет открыта в модальном окне.\n\nПосле регистрации пользователь получит доступ к расширенной статистике и персонализированным рекомендациям.');
             });
+
+            // Обновление статистики каждые 5 секунд (демо)
+            setInterval(updateStats, 5000);
+            
+            // Первоначальное обновление статистики
+            updateStats();
         });
+
+        // Функция для обновления статистики (демо)
+        function updateStats() {
+            const stats = [
+                { min: 1200, max: 1300 },  // Матчи
+                { min: 50, max: 60 },      // Процент побед
+                { min: 2.5, max: 3.5 },    // KDA
+                { min: 4000, max: 4500 }   // MMR
+            ];
+            
+            document.querySelectorAll('.stat-value').forEach((element, index) => {
+                if (index === 1) {
+                    // Для процента побед
+                    element.textContent = (Math.random() * (stats[index].max - stats[index].min) + stats[index].min).toFixed(1) + '%';
+                } else if (index === 2) {
+                    // Для KDA
+                    element.textContent = (Math.random() * (stats[index].max - stats[index].min) + stats[index].min).toFixed(1);
+                } else {
+                    // Для остальных значений
+                    const value = Math.floor(Math.random() * (stats[index].max - stats[index].min) + stats[index].min);
+                    element.textContent = value.toLocaleString();
+                }
+            });
+        }
     </script>
 </body>
 </html>
